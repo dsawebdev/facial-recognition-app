@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.4.0",
     "@material-ui/icons": "^3.0.1",
     "clarifai": "^2.9.0",
+    "npm": "^6.4.1",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-particles-js": "^2.3.0",

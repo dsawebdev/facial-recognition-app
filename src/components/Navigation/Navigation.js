@@ -5,8 +5,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
 
 
@@ -29,19 +27,40 @@ const styles = {
 };
 
 function Navigation(props) {
-  const { classes } = props;
+  const { classes, onRouteChange, isSignedIn } = props;
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.bar}>
         <Toolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            Facial Recognition App
+          Facial Recognition App
           </Typography>
-          <Button color="inherit">Sign In</Button>
+          {isSignedIn 
+            ? <Button color="inherit" onClick={() => onRouteChange('signout')}>Sign Out</Button>
+            : <Button color="inherit" onClick={() => onRouteChange('signin')}>Sign In</Button>
+            
+          }
+          
         </Toolbar>
       </AppBar>
     </div>
-  );
+  )
+
+  // } else {
+  //   return (
+  //     <div className={classes.root}>
+  //       <AppBar position="static" className={classes.bar}>
+  //         <Toolbar>
+  //           <Typography variant="h6" color="inherit" className={classes.grow}>
+  //           Facial Recognition App
+  //           </Typography>
+  //           <Button color="inherit" onClick={() => onRouteChange('signout')}>Sign In</Button>
+  //           <Button color="inherit" onClick={() => onRouteChange('register')}>Register</Button>
+  //         </Toolbar>
+  //       </AppBar>
+  //     </div>
+  //   )
+  // }
 }
 
 Navigation.propTypes = {

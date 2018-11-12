@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
-import Zoom from '@material-ui/core/Zoom';
 
 
 
@@ -32,14 +29,16 @@ const styles = theme => ({
 });
 
 
-class SignIn extends React.Component {
+class Register extends React.Component {
   state = {
+    name: '',
     email: '',
     password: ''
   };
 
-  handleChange = ({email, password}) => event => {
+  handleChange = ({email, password, name}) => event => {
     this.setState({
+      [name]: event.target.value,
       [email]: event.target.value,
       [password]: event.target.value
     });
@@ -51,7 +50,16 @@ class SignIn extends React.Component {
     return (
       <article className="center br3 pa3 pa4-ns mv3 mw6 ba b--black-12 shadow-5">
         <form className={classes.container} noValidate autoComplete="off">
-          <legend className="f1 fw6 ph0 mh0">Sign In</legend>
+          <legend className="f1 fw6 ph0 mh0">Register</legend>
+            <TextField
+              id="outlined-name"
+              label="Name"
+              className={classes.textField}
+              value={this.state.name}
+              onChange={this.handleChange('name')}
+              margin="normal"
+              variant="outlined"
+            />
             <TextField
               id="outlined-name"
               label="Email"
@@ -77,20 +85,14 @@ class SignIn extends React.Component {
               onClick={() =>onRouteChange('home')}>
               Sign In
             </Button>
-            <Tooltip 
-              TransitionComponent={Fade} 
-              TransitionProps={{ timeout: 600 }} 
-              title="New User">
-              <Button onClick={() =>onRouteChange('register')}>Register</Button>
-            </Tooltip>
         </form>
       </article>
     );
   }
 }
 
-SignIn.propTypes = {
+Register.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SignIn)
+export default withStyles(styles)(Register)
