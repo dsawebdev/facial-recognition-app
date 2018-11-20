@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-
-
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -16,6 +14,12 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 400,
+  },
+  textField2: {
+    paddingTop: 10,
+    marginLeft: theme.spacing.unit ,
+    marginRight: theme.spacing.unit,
+    flexBasis: 400,
   },
   dense: {
     marginTop: 16,
@@ -30,51 +34,80 @@ const styles = theme => ({
 
 
 class Register extends React.Component {
-  state = {
-    name: '',
-    email: '',
-    password: ''
-  };
+  constructor (props) {
+    super(props)
+    this.state = {
+      name: '',
+      email: '',
+      password: ''
+    };
+  }
+  
+  handleClickShowPassword = () => {
+    this.setState(state => ({ showPassword: !state.showPassword }));
+  }
 
-  handleChange = ({email, password, name}) => event => {
-    this.setState({
-      [name]: event.target.value,
-      [email]: event.target.value,
-      [password]: event.target.value
-    });
-  };
+  onEmailChange = (event) => {
+    this.setState({email: event.target.value})
+  }
+  onNameChange = (event) => {
+    this.setState({name: event.target.value})
+  }
+  onPasswordChange = (event) => {
+    this.setState({password: event.target.value})
+  }
+
+  onSubmitRegister = () => {
+    fetch('http://localhost:3000/register', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+        name: this.state.name
+      })
+    })
+      .then(response => response.json())
+      .then(user => {
+        if(user){
+          this.props.loadNewUser(user)
+          this.props.onRouteChange('home')
+        }
+      })
+  }
 
   render() {
-    const { classes, onRouteChange } = this.props;
+    const { classes} = this.props;
 
     return (
       <article className="center br3 pa3 pa4-ns mv3 mw6 ba b--black-12 shadow-5">
-        <form className={classes.container} noValidate autoComplete="off">
+        <div className={classes.container} noValidate autoComplete="off">
           <legend className="f1 fw6 ph0 mh0">Register</legend>
             <TextField
               id="outlined-name"
               label="Name"
               className={classes.textField}
               value={this.state.name}
-              onChange={this.handleChange('name')}
+              onChange={this.onNameChange}
               margin="normal"
               variant="outlined"
             />
             <TextField
-              id="outlined-name"
+              id="outlined-email"
               label="Email"
               className={classes.textField}
               value={this.state.email}
-              onChange={this.handleChange('email')}
+              onChange={this.onEmailChange}
               margin="normal"
               variant="outlined"
             />
             <TextField
-              id="outlined-name"
+              id="outlined-password"
               label="Password"
-              className={classes.textField}
+              className={classes.textField2}
               value={this.state.password}
-              onChange={this.handleChange('password')}
+              type={this.state.showPassword ? 'text' : 'password'}
+              onChange={this.onPasswordChange}
               margin="normal"
               variant="outlined"
             />
@@ -82,10 +115,10 @@ class Register extends React.Component {
               variant="outlined" 
               className={classes.button} 
               type="submit"
-              onClick={() =>onRouteChange('home')}>
+              onClick={this.onSubmitRegister}>
               Sign In
             </Button>
-        </form>
+        </div>
       </article>
     );
   }

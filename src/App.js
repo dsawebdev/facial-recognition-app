@@ -20,10 +20,10 @@ const app = new Clarifai.App({
 const particleOptions = {
   particles: {
     number: {
-      value: 35,
+      value: 60,
       density: {
         enable: true,
-        value_area: 600
+        value_area: 800
       }
     },
   }
@@ -38,10 +38,25 @@ class App extends Component {
       imageUrl: '',
       box: {},
       route: 'signin',
-      isSignedIn: true
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
 
+  loadNewUser = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        entries: data.entries,
+        joined: data.joined
+    }});
+  }
   calculateFaceLocation = (data) => {
     const clarafaiFace = data.outputs[0].data.regions[0].region_info.bounding_box
     const image = document.getElementById('inputimage')
@@ -57,7 +72,6 @@ class App extends Component {
   }
 
   displayBoundingBox = (box) => {
-    console.log(box);
     this.setState({box: box})
   }
 
@@ -65,10 +79,25 @@ class App extends Component {
     this.setState({input: e.target.value})
   }
 
-  onButtonSubmit = () => {
+  onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input})
     app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response => this.displayBoundingBox(this.calculateFaceLocation(response)))
+      .then(response => {
+        if(response) {
+          fetch('http://localhost:3000/image',{
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, {entries: count}))
+          })
+        }
+        this.displayBoundingBox(this.calculateFaceLocation(response))
+      })
       .catch(err => console.log(err))
   }
 
@@ -79,32 +108,32 @@ class App extends Component {
       this.setState({isSignedIn: true})
     }
     this.setState({route: route})
-
   }
 
 
   render() {
+    const { isSignedIn, route, imageUrl, box } = this.state;
     return (
       <div className="App">
         <Particles 
           params={ particleOptions }
           className="particles"
         />
-        <Navigation isSignedIn={this.isSignedIn} onRouteChange={this.onRouteChange}/>
-        { this.state.route === 'home' 
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+        {route === 'home' 
           ? <div>
               <Logo /> 
-              <Rank />
+              <Rank name={this.state.user.name} entries={this.state.user.entries}   />
               <ImageLinkForm 
                 onInputChange={this.onInputChange} 
-                onButtonSubmit={this.onButtonSubmit}
+                onPictureSubmit={this.onPictureSubmit}
               />
-              <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
+              <FaceRecognition box={box} imageUrl={imageUrl}/>
             </div>
           : (
-              this.state.route === 'signin' 
-              ? <SignIn onRouteChange={this.onRouteChange} /> 
-              : <Register onRouteChange={this.onRouteChange} />
+              route === 'signin' 
+              ? <SignIn onRouteChange={this.onRouteChange} loadNewUser={this.loadNewUser} /> 
+              : <Register onRouteChange={this.onRouteChange} loadNewUser={this.loadNewUser} />
             )
         }
       </div>

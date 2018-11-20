@@ -16,8 +16,6 @@ const styles = {
     flexGrow: 1,
   },
   bar: {
-    background: '#003973',
-    background: '-webkit-linear-gradient(to right, #e5e5be, #003973)',
     background: 'linear-gradient(to right, #e5e5be, #003973)'
   },
   menuButton: {
@@ -28,39 +26,35 @@ const styles = {
 
 function Navigation(props) {
   const { classes, onRouteChange, isSignedIn } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" className={classes.bar}>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-          Facial Recognition App
-          </Typography>
-          {isSignedIn 
-            ? <Button color="inherit" onClick={() => onRouteChange('signout')}>Sign Out</Button>
-            : <Button color="inherit" onClick={() => onRouteChange('signin')}>Sign In</Button>
-            
-          }
-          
-        </Toolbar>
-      </AppBar>
-    </div>
-  )
-
-  // } else {
-  //   return (
-  //     <div className={classes.root}>
-  //       <AppBar position="static" className={classes.bar}>
-  //         <Toolbar>
-  //           <Typography variant="h6" color="inherit" className={classes.grow}>
-  //           Facial Recognition App
-  //           </Typography>
-  //           <Button color="inherit" onClick={() => onRouteChange('signout')}>Sign In</Button>
-  //           <Button color="inherit" onClick={() => onRouteChange('register')}>Register</Button>
-  //         </Toolbar>
-  //       </AppBar>
-  //     </div>
-  //   )
-  // }
+  //Todo FIGURE OUT THE STATE OF THIS...|
+  if (isSignedIn === true) {
+    return (
+      <div className={classes.root}>
+        <AppBar position="static" className={classes.bar}>
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+            Facial Recognition App
+            </Typography>
+            <Button color="inherit" onClick={() => onRouteChange('signout')}>Sign Out</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+    )
+  } else {
+    return (
+      <div className={classes.root}>
+        <AppBar position="static" className={classes.bar}>
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+            Facial Recognition App
+            </Typography>
+            <Button color="inherit" onClick={() => onRouteChange('signin')}>Sign In</Button>
+            <Button color="inherit" onClick={() => onRouteChange('register')}>Register</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+    )
+  }
 }
 
 Navigation.propTypes = {
