@@ -35,7 +35,7 @@ function Navigation(props) {
             <Typography variant="h6" color="inherit" className={classes.grow}>
             Facial Recognition App
             </Typography>
-            <Button color="inherit" onClick={() => onRouteChange('signout')}>Sign Out</Button>
+            <Button color="inherit" onClick={() => onRouteChange('signin')}>Sign Out</Button>
           </Toolbar>
         </AppBar>
       </div>
