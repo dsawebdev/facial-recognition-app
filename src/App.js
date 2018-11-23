@@ -13,7 +13,7 @@ import SignIn from './components/SignIn/SignIn'
 
 //?Clarifai API
 const app = new Clarifai.App({
- apiKey: '1aa2f2835e9043f79505db5d3282daf5'
+  apiKey: '1aa2f2835e9043f79505db5d3282daf5'
 });
 
 //?Particle Overlay Options
@@ -29,24 +29,26 @@ const particleOptions = {
   }
 }
 
+//! Declaring initial state before setting state to clear out user
+const initialState = {
+  input: '',
+  imageUrl: '',
+  box: {},
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+  id: '',
+  name: '',
+  entries: 0,
+  joined: ''
+  }
+}
 
 class App extends Component {
   constructor() {
     super()
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        entries: 0,
-        joined: ''
-      }
+    this.state = initialState
     }
-  }
 
   loadNewUser = (data) => {
     this.setState({
@@ -57,12 +59,14 @@ class App extends Component {
         joined: data.joined
     }});
   }
+
+  //? Function that calculates bounding box around face
   calculateFaceLocation = (data) => {
     const clarafaiFace = data.outputs[0].data.regions[0].region_info.bounding_box
     const image = document.getElementById('inputimage')
     const width = Number(image.width)
     const height = Number(image.height)
-    
+
     return {
       leftCol: clarafaiFace.left_col * width,
       topRow: clarafaiFace.top_row * height,
@@ -71,6 +75,7 @@ class App extends Component {
     }
   }
 
+  //? Function that displays bounding box around face
   displayBoundingBox = (box) => {
     this.setState({box: box})
   }
@@ -95,6 +100,7 @@ class App extends Component {
           .then(count => {
             this.setState(Object.assign(this.state.user, {entries: count}))
           })
+          .catch(console.log)
         }
         this.displayBoundingBox(this.calculateFaceLocation(response))
       })
@@ -103,7 +109,7 @@ class App extends Component {
 
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})
     }
