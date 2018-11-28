@@ -116,7 +116,7 @@ class Register extends React.Component {
               className={classes.button} 
               type="submit"
               onClick={this.onSubmitRegister}>
-              Sign In
+              Register
             </Button>
         </div>
       </article>

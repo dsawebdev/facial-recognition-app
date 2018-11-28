@@ -15,10 +15,10 @@ import SignIn from './components/SignIn/SignIn'
 const particleOptions = {
   particles: {
     number: {
-      value: 60,
+      value: 35,
       density: {
         enable: true,
-        value_area: 800
+        value_area: 600
       }
     },
   }
