@@ -7,13 +7,15 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 
-
+//? Material UI Styles
 const styles = {
   root: {
     flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
+    marginLeft: 170, 
+    fontSize: 40 
   },
   bar: {
     background: 'linear-gradient(to right, #e5e5be, #003973)'
@@ -26,7 +28,6 @@ const styles = {
 
 function Navigation(props) {
   const { classes, onRouteChange, isSignedIn } = props;
-  //Todo FIGURE OUT THE STATE OF THIS...|
   if (isSignedIn === true) {
     return (
       <div className={classes.root}>
